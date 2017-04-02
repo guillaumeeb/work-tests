@@ -13,8 +13,21 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "centos/7"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+    v.cpus = 1
+  end
 
-  N = 2
+
+  N = 3
+
+  VAGRANT_VM_PROVIDER = "virtualbox"
+  ANSIBLE_RAW_SSH_ARGS = []
+
+  (1..N-1).each do |machine_id|
+    ANSIBLE_RAW_SSH_ARGS << "-o IdentityFile=.vagrant/machines/node#{machine_id}/#{VAGRANT_VM_PROVIDER}/private_key"
+  end
+
   (1..N).each do |machine_id|
     config.vm.define "node#{machine_id}" do |machine|
       machine.vm.hostname = "node#{machine_id}"
@@ -28,6 +41,7 @@ Vagrant.configure(2) do |config|
           ansible.limit = "all"
           ansible.playbook = "playbook.yml"
           ansible.inventory_path = "inventory"
+          ansible.raw_ssh_args = ANSIBLE_RAW_SSH_ARGS
         end
       end
     end
@@ -37,7 +51,8 @@ Vagrant.configure(2) do |config|
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
+  # Je veux pas mettre à jour la box
+  config.vm.box_check_update = false
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
