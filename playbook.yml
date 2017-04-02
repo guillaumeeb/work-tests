@@ -1,0 +1,20 @@
+---
+- name: Install Docker
+  hosts: all
+  become: true
+
+  tasks:
+  - name: yum utils for docker
+    yum: name=yum-utils state=present
+
+  - name: Add docker repo
+    command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+  - name: Make yum cache
+    command: yum makecache fast
+
+  - name: Install Docker-ce
+    yum: name=docker-ce state=present
+
+  - name: Start docker
+    systemd: state=started name=docker
