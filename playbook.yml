@@ -22,7 +22,7 @@
       value: 262144
       state: present
 
-## TODO il faut utiliser docker-daemon.json, j'y arrive pas...
+## TODO il faut modifier le service avec les options et faire un syctl reload
   - name: Position docker ulimits for running elasticsearch on Swarm
     lineinfile:
       destfile: /etc/default/docker
