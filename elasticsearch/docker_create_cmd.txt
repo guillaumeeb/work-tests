@@ -28,3 +28,23 @@ sudo docker service create \
    docker.elastic.co/kibana/kibana:5.3.0
 
 #Ca marche !! On accède à Kibana et à la supervision des noeuds es.
+
+# Logstash
+sudo docker service create \
+   --name logstash1 \
+   --network elasticsearch-backend \
+   --network elasticsearch-frontend \
+   --mount type=bind,source=/vagrant/logstash/pipeline,destination=/usr/share/logstash/pipeline/ \
+   -p 5044:5044\
+   docker.elastic.co/logstash/logstash:5.3.0
+#   --mount type=bind,source=/vagrant/logstash/config,destination=/usr/share/logstash/config/ \
+
+# Problème de conf logstash à résoudre, essaye de se connecter à elasticsearch:9200, dans logstash.yml
+
+
+#Installation de filebeat sur node 1
+# Remplacement de /etc/filebeat/filebeat.yml par celui en conf
+# démarrage de filebeat
+sudo /etc/init.d/filebeat start
+
+# C'est mal indexé, mais ça marche !!

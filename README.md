@@ -33,6 +33,10 @@ Est-ce qu'on peut déployer les services avec Ansible ? Sur la machine principal
  * Regarder le déploiement d'un, ou plusieurs logstash ? Un logstash par fonctionnalité semble bien : syslog, metrics, gpfs files, product logs, pbs logs... Plus versatile, et simplifié avec Swarm, on prend juste un port différent...
  * Filebeat/Metricbeats docker ou pas ? A priori pas d'image officielle encore, mais y a  pas de raison avec un bon montage de volume.
 
+## Tâches en cours
+ * Déploiement d'une logstash configuré en syslog. Logs bien transmis mais non formatés actuellement.
+ * Déploiement de filebeat ?
+
 
 ## Autre possibilité non full swarm, pour elasticsearch essentiellement
 Et éventuellement Kafka si utilisé.
