@@ -25,13 +25,20 @@ Vu la stabilité et les changements des 6 derniers mois. Si cas d'utilisation pa
 
 1. Ca marche !! cf. le fichier docker_create_cmd.txt. Par contre, elasticsearch n'a pas de port ouvert sur l'extérieur via le dnsrr. A priori pas grave dans notre cas, il est accédé par Kibana ou logstash ou Kafka à l'intérieur du Swarm directement sur le réseau (qui font proxy). Sinon il faudrait créer un proxy (haproxy, ou nginx) par dessus pour y accéder.
 Le routing mesh sur kibana fonctionne très bien aussi ! On peut facilement accéder à l'ihm depuis n'importe quel noeud.
+Est-ce qu'on peut déployer les services avec Ansible ? Sur la machine principale ? Ca doit se faire. Tester si démarrés ou non ?
 2. Franchement, ça semble pas valoir le coup, et puis pour le placement des services c'est quasi impossible. Si on fait ça, plutôt passer au point 3 où on maitrise tout.
 
+## Questions à se poser 
+ * Utiliser Kafka en tampon ou pas ? Ca complexifie l'architecture et la maintenance, est-ce vraiment utile ? Dans un premier temps non.
+ * Regarder le déploiement d'un, ou plusieurs logstash ? Un logstash par fonctionnalité semble bien : syslog, metrics, gpfs files, product logs, pbs logs... Plus versatile, et simplifié avec Swarm, on prend juste un port différent...
+ * Filebeat/Metricbeats docker ou pas ? A priori pas d'image officielle encore, mais y a  pas de raison avec un bon montage de volume.
 
-## Autre possibilité non full swarm
+
+## Autre possibilité non full swarm, pour elasticsearch essentiellement
+Et éventuellement Kafka si utilisé.
 
 Utiliser juste docker run, avec les bon ports mappés pour le elasticsearch.
-Pas de network docker.
+Pas de network docker pour ES.
 Utiliser ansible pour lancer le docker sur chaque machine.
-Possibilité de faire un Swarm à côté pour les autres services ? On utilise Swarm pour les différents Kibana ou logstash, on veut pas savoir où ils sont déployés ?
-Avantage de ça, meilleure maitrise du déploiement précis des composants.
+Possibilité de faire un Swarm à côté pour les autres services ? On utilise Swarm pour les différents Kibana ou logstash, on veut pas savoir où ils sont déployés ? Ca serait bien quand même !
+Avantage de ça, meilleure maitrise du déploiement précis de certains composants distribués.
