@@ -7,6 +7,9 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=10.0.0.3"
+      - "network.host=_eth0:ipv4_"
+      - "network.publish_host=_eth0:ipv4_"
 # Ulimits are currently not being use with docker stack create !!
 # Tryning to configure at docker daemon level...
     ulimits:
