@@ -16,10 +16,16 @@ Seule solution, forcer les bonnes options --default-ulimit dans ce fichier. ça 
 Second problème : déclaration du réseau dans Swarm. Swarm est fait pour load balancer des services "identiques". Pas l'air super pour les services distribués... Par exemple, là il déclare une ip commune à tout mes démons elasticsearch dans le network du service. Ne pas utiliser le network de Swarm ? Du coup tous les elasticsearch se bound sur la même ip, et donc il y a conflit. Compliqué de se faire découvrir les services entre eux... Peut être avec dnsrr ? https://docs.docker.com/engine/swarm/networking/#use-dns-round-robin-for-a-service. Mais pas dans compose v3.
 C'est pas très sec le Swarm mode et compose v3...
 Du coup utiliser plutôt le docker service create ? Ca risque de faire beaucoup d'options dans la ligne de commande...
- Actions : 1. Essayer avec service create et dnsrr.
+cf. https://sematext.com/blog/2016/12/12/docker-elasticsearch-swarm/ ça a l'air possible. Mais est-ce souhaitable ? Définitivement pas sec.
+
+Actions : 1. Essayer avec service create et dnsrr. Ou alors créer le réseau swarm en dehors du compose, et rattacher le compose au réseau créé en external !
            2. Essayer avec 3 (ou 4) services non répliqués dans le docker-compose, mais bon, pas trop philo swarm, est-ce que ça vaut le coup ?
            3. Passer à la possibilité non full swarm ci-dessous...
-Vu la stabilité et les changements des 6 derniers mois. Si cas d'utilisation pas commun, mieux vaut surement en rester à du codker "classique" ? Donc possibilité suivante ?
+Vu la stabilité et les changements des 6 derniers mois. Si cas d'utilisation pas commun, mieux vaut surement en rester à du coder "classique" ? Donc possibilité suivante ?
+
+1. Ca marche !! cf. le fichier docker_create_cmd.txt. Par contre, elasticsearch n'a pas de port ouvert sur l'extérieur via le dnsrr. A priori pas grave dans notre cas, il est accédé par Kibana ou logstash ou Kafka à l'intérieur du Swarm directement sur le réseau (qui font proxy). Sinon il faudrait créer un proxy (haproxy, ou nginx) par dessus pour y accéder.
+Le routing mesh sur kibana fonctionne très bien aussi ! On peut facilement accéder à l'ihm depuis n'importe quel noeud.
+2. Franchement, ça semble pas valoir le coup, et puis pour le placement des services c'est quasi impossible. Si on fait ça, plutôt passer au point 3 où on maitrise tout.
 
 
 ## Autre possibilité non full swarm

@@ -32,6 +32,8 @@ Vagrant.configure(2) do |config|
     config.vm.define "node#{machine_id}" do |machine|
       machine.vm.hostname = "node#{machine_id}"
       machine.vm.network "private_network", ip: "192.168.77.#{20+machine_id}"
+      #Forward kibana port
+      machine.vm.network "forwarded_port", guest: 5601, host: "#{5600+machine_id}"
   
       # Only execute once the Ansible provisioner,
       # when all the machines are up and ready.

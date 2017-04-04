@@ -1,0 +1,30 @@
+sudo docker network create -d overlay elasticsearch-backend
+#Can't publish port in dnsrr mode.
+sudo docker service create \
+   --name escluster \
+   --network elasticsearch-backend \
+   --mode global \
+   --endpoint-mode dnsrr \
+   --update-parallelism 1 \
+   --update-delay 60s \
+   -e cluster.name=docker-escluster \
+   -e bootstrap.memory_lock=true \
+   -e "ES_JAVA_OPTS=-Xms512m -Xmx512m" \
+   -e discovery.zen.ping.unicast.hosts=escluster \
+   -e network.host=_eth0:ipv4_ \
+   --mount type=bind,source=/tmp,destination=/usr/share/elasticsearch/data \
+   --limit-cpu 0.95 \
+   --limit-memory 1900M \
+   docker.elastic.co/elasticsearch/elasticsearch:5.3.0
+
+#Trying kibana
+sudo docker network create -d overlay elasticsearch-frontend
+sudo docker service create \
+   --name kibana1 \
+   --network elasticsearch-backend \
+   --network elasticsearch-frontend \
+   -e ELASTICSEARCH_URL=http://escluster:9200 \
+   -p 5601:5601\
+   docker.elastic.co/kibana/kibana:5.3.0
+
+#Ca marche !! On accède à Kibana et à la supervision des noeuds es.
