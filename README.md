@@ -37,8 +37,9 @@ Autre réflexion : Swarm marche très bien pour logstash ou kibana. On déploie 
 
 ## Tâches en cours
  * Déploiement d'une logstash configuré en syslog. Logs bien transmis mais non formatés actuellement --> OK
+ Attention, logstash par défaut a xpack déployé dans le docker, qui cherche à se connecter à un elasticsearch configuré dans le logstash.yaml. Il faut modifier la conf ou le désactiver.
  * Déploiement de filebeat --> via Ansible. Metricbeat aussi déployé via ansible. Ca marche bien sur elastic.
- Par contre, compliqué de charger les template.json et autre dashboard, mais ça se fait, cf fichiers playbook et cmd.txt
+ Par contre, compliqué de charger les template.json et autre dashboard, mais ça se fait, cf fichiers playbook et cmd.txt.
  * Documenter le déploiement en partant de zero. Il y a qqs commande manuelles (creation des services ES/Kibana/Logstash, lancement filebeat et metricbeat)
 
 
