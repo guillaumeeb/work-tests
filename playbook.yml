@@ -80,3 +80,60 @@
         --token={{ token }}
         {{ manager_ip }}:2377
     when: swarm_active|failed
+
+- name: Install beats for ELK tests
+  hosts: node1,node2
+  become: true
+  tasks:
+  - name: Download filebeat
+    get_url:
+      url: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.3.0-x86_64.rpm
+      dest: /tmp/filebeat-5.3.0-x86_64.rpm
+      mode: 0550
+
+  - name: Install filebeat
+    yum:
+      name: /tmp/filebeat-5.3.0-x86_64.rpm
+      state: present
+
+  - name: configure filebeat
+    copy:
+      src: filebeat/filebeat.yml
+      dest: /etc/filebeat/filebeat.yml
+      mode: 0644
+##Start filebeat manually if needed
+
+  - name: Download metricbeat
+    get_url:
+      url: https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-5.3.0-x86_64.rpm
+      dest: /tmp/metricbeat-5.3.0-x86_64.rpm
+      mode: 0550
+
+  - name: Install metricbeat-5.3.0-x86_64.rpm
+    yum:
+      name: /tmp/metricbeat-5.3.0-x86_64.rpm
+      state: present
+
+  - name: configure metricbeat-5.3.0-x86_64.rpm
+    copy:
+      src: metricbeat/metricbeat.yml
+      dest: /etc/metricbeat/metricbeat.yml
+      mode: 0644
+
+  # Charger les template metricbeat manuellement qd ES est démarré
+  # Trover un container qui exécute elasticsearch
+  # sudo docker cp /etc/metricbeat/metricbeat.template.json f58970b29b39:/tmp
+# sudo docker exec f58970b29b39 curl --user elastic:changeme -XPUT 'http://escluster:9200/_template/metricbeat' -d@/tmp/metricbeat.template.json
+
+# Start beats only if ELK services have been created
+- name: Start beats for ELK tests
+  #hosts: nonodes
+  hosts: node1,node2
+  become: true
+  tasks:
+
+  - name: Start filebeat
+    systemd: state=restarted name=filebeat
+
+  - name: Start metricbeat
+    systemd: state=restarted name=metricbeat

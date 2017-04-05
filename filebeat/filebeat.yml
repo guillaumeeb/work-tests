@@ -19,7 +19,10 @@ filebeat.prospectors:
 
   # Paths that should be crawled and fetched. Glob based paths.
   paths:
-    - /var/log/*.log
+    - /var/log/messages
+    - /var/log/secure
+    - /var/log/cron
+    - /var/log/maillog
   document_type: syslog
     #- c:\programdata\elasticsearch\logs\*
 
@@ -91,7 +94,7 @@ filebeat.prospectors:
 #----------------------------- Logstash output --------------------------------
 output.logstash:
   # The Logstash hosts
-  hosts: ["node1:5044"]
+  hosts: ["192.168.77.21:5044"]
   # Avec Swarm, ce pourrait être n'importe quel noeud du swarm
 
   # Optional SSL. By default is off.

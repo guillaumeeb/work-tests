@@ -19,7 +19,10 @@ Vagrant.configure(2) do |config|
   end
 
 
-  N = 3
+#  N = 3
+# Avec 3, ça passe sur le poste, mais au bout d'un moment ça rame.
+# Bien pour vérifier que 3 ça se passe bien. Mais 2 suffit pour la pluspart des cas.
+  N = 2
 
   VAGRANT_VM_PROVIDER = "virtualbox"
   ANSIBLE_RAW_SSH_ARGS = []
