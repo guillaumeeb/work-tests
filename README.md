@@ -31,9 +31,9 @@ Est-ce qu'on peut déployer les services avec Ansible ? Sur la machine principal
 Autre réflexion : Swarm marche très bien pour logstash ou kibana. On déploie le service, on y accède depuis n'importe quel neoud, on a une sorte de proxy automatique. C'est cool. On pourrait imaginer avoir 2 kibana, qui sont stateless pour haute dispo, et 2 logstashs aussi ?.
 
 ## Questions à se poser 
- * Utiliser Kafka en tampon ou pas ? Ca complexifie l'architecture et la maintenance, est-ce vraiment utile ? Dans un premier temps non.
- * Regarder le déploiement d'un, ou plusieurs logstash ? Un logstash par fonctionnalité semble bien : syslog, metrics, gpfs files, product logs, pbs logs... Plus versatile, et simplifié avec Swarm, on prend juste un port différent...
- * Filebeat/Metricbeats docker ou pas ? A priori pas d'image officielle encore, mais y a  pas de raison avec un bon montage de volume.
+ * Utiliser Kafka en tampon ou pas ? Ca complexifie l'architecture et la maintenance, est-ce vraiment utile ? Dans un premier temps non. Beats et logstash ont des possibilités de tampons sur disque si ES ou Logstash surchargés.
+ * Regarder le déploiement d'un, ou plusieurs logstash ? Un logstash par fonctionnalité semble bien : syslog, metrics, gpfs files, product logs, pbs logs... Plus versatile, et simplifié avec Swarm, on prend juste un port différent... A voir, il semble qu'on peut mettre plusieurs fichiers de conf dans un logstash et donc bien séparer les fonctionnalités déjà.
+ * Filebeat/Metricbeats docker ou pas ? A priori pas d'image officielle encore, mais y a  pas de raison avec un bon montage de volume. A tester, pas évident car liés au système (file système, ou stats ressources...)
 
 ## Tâches en cours
  * Déploiement d'une logstash configuré en syslog. Logs bien transmis mais non formatés actuellement --> OK
